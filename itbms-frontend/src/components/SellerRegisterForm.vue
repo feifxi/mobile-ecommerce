@@ -10,7 +10,7 @@ import { Eye, EyeOff } from "lucide-vue-next";
 const router = useRouter();
 const statusMessageStore = useStatusMessageStore();
 
-const BANK_NAMES = ['SCB', 'KBANK', 'KTB', 'BAY', 'GSB', 'TTB']
+const BANK_NAMES = ["SCB", "KBANK", "KTB", "BAY", "GSB", "TTB"];
 
 const userData = reactive({
   nickname: "",
@@ -44,7 +44,7 @@ const errorFormMessage = reactive({
   idCardImageBack: "",
 });
 
-const fieldIntegrity = {   
+const fieldIntegrity = {
   nickname: {
     checkConstraint: (data) => {
       return 0 < data.length && data.length <= 40;
@@ -59,17 +59,23 @@ const fieldIntegrity = {
   },
   email: {
     checkConstraint: (data) => {
-      return 0 < data.length && data.length <= 50 && /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(data);
+      return (
+        0 < data.length &&
+        data.length <= 50 &&
+        /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(data)
+      );
     },
     errorMessage: "Invalid email.",
   },
   password: {
     checkConstraint: (data) => {
       if (typeof data !== "string") return false;
-      const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,14}$/;
+      const regex =
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,14}$/;
       return regex.test(data);
     },
-    errorMessage: "Password must be 8-14 characters long and include at least one lowercase letter, one uppercase letter, one number, and one special character.",
+    errorMessage:
+      "Password must be 8-14 characters long and include at least one lowercase letter, one uppercase letter, one number, and one special character.",
   },
   shopName: {
     checkConstraint: (data) => {
@@ -82,20 +88,22 @@ const fieldIntegrity = {
       // Allows only digits, optional + at start, 8–15 digits total
       return /^\+?[0-9]{8,15}$/.test(data);
     },
-    errorMessage: "Phone number must contain only digits (8-15 digits, optional + at start).",
+    errorMessage:
+      "Phone number must contain only digits (8-15 digits, optional + at start).",
   },
   bankName: {
     checkConstraint: (data) => {
-      return data != '';
+      return data != "";
     },
     errorMessage: "Bank must be selected.",
   },
   bankAccountNumber: {
     checkConstraint: (data) => {
       // Must be 6–16 digits, only numbers allowed
-      return /^[0-9]{6,16}$/.test(data)
+      return /^[0-9]{6,16}$/.test(data);
     },
-    errorMessage: "Bank account number must contain only digits (6-16 characters).",
+    errorMessage:
+      "Bank account number must contain only digits (6-16 characters).",
   },
   idCardNumber: {
     checkConstraint: (data) => {
@@ -103,7 +111,7 @@ const fieldIntegrity = {
       return /^[0-9]{13}$/.test(data);
     },
     errorMessage: "ID Card Number must contain exactly 13 digits.",
-  } 
+  },
 };
 
 const handleFocusIn = (e) => {
@@ -120,8 +128,8 @@ const handleFocusOut = (e) => {
 };
 
 const handleChangeBank = (e) => {
-  currentFocusField.value = e.target.name
-}
+  currentFocusField.value = e.target.name;
+};
 
 const checkFieldIntegrity = (field) => {
   if (fieldIntegrity[field]) {
@@ -139,10 +147,13 @@ const validateAllField = () => {
       break;
     }
   }
-  if (userData.idCardImageFront == ''  || userData.idCardImageFront == null ||
-      userData.idCardImageBack == ''  || userData.idCardImageBack == null) 
-  {
-    isValid = false 
+  if (
+    userData.idCardImageFront == "" ||
+    userData.idCardImageFront == null ||
+    userData.idCardImageBack == "" ||
+    userData.idCardImageBack == null
+  ) {
+    isValid = false;
   }
   isFormValid.value = isValid;
 };
@@ -153,16 +164,19 @@ const submitForm = async (e) => {
   try {
     // add userdata
     const formData = new FormData();
-    formData.append('userType', "SELLER");
+    formData.append("userType", "SELLER");
     for (const field in userData) {
       if (userData[field] !== "" && userData[field] != null) {
         formData.append(field, userData[field]);
       }
     }
     // add natnional id card image if exists
-    if (userData.idCardImageFront !== ''  && userData.idCardImageFront != null &&
-        userData.idCardImageBack !== ''  && userData.idCardImageBack != null) 
-    { 
+    if (
+      userData.idCardImageFront !== "" &&
+      userData.idCardImageFront != null &&
+      userData.idCardImageBack !== "" &&
+      userData.idCardImageBack != null
+    ) {
       formData.append("idCardImageFront", userData.idCardImageFront.file);
       formData.append("idCardImageBack", userData.idCardImageBack.file);
     }
@@ -173,16 +187,18 @@ const submitForm = async (e) => {
     const result = await res.json();
     // console.log(result);
     if (res.ok) {
-      statusMessageStore.setStatusMessage("The user account has been successfully registered.");
+      statusMessageStore.setStatusMessage(
+        "The user account has been successfully registered."
+      );
       router.push({ name: "login" });
-    } 
-    else if (res.status === 409) {
-      statusMessageStore.setStatusMessage("User with this email already exists.", false);
-    } 
-    else if (res.status === 400) {
+    } else if (res.status === 409) {
+      statusMessageStore.setStatusMessage(
+        "User with this email already exists.",
+        false
+      );
+    } else if (res.status === 400) {
       statusMessageStore.setStatusMessage(result.message, false);
-    } 
-    else {
+    } else {
       throw new Error("Something went wrong");
     }
   } catch (err) {
@@ -216,27 +232,27 @@ const handleSelectidCardImage = (e, type = "FRONT") => {
   let uploadedImage = {
     file: file,
     preview: URL.createObjectURL(file),
-  }
+  };
 
   if (type === "FRONT") {
-    userData.idCardImageFront = uploadedImage
+    userData.idCardImageFront = uploadedImage;
   } else {
-    userData.idCardImageBack = uploadedImage
+    userData.idCardImageBack = uploadedImage;
   }
   e.target.value = "";
 };
 
 const handleRemoveidCardNumberImage = (type = "FRONT") => {
   if (type === "FRONT") {
-    userData.idCardImageFront = ''
+    userData.idCardImageFront = "";
   } else {
-    userData.idCardImageBack = ''
+    userData.idCardImageBack = "";
   }
-}
+};
 
 const navigateToLogin = () => {
   router.push({ name: "login" });
-}
+};
 
 const showPassword = ref(false);
 const togglePassword = () => (showPassword.value = !showPassword.value);
@@ -259,7 +275,9 @@ watch(userData, () => {
     </div>
 
     <div class="flex">
-      <div class="flex-1 flex flex-col bg-white max-lg:rounded-xl max-lg:shadow-lg p-6">
+      <div
+        class="flex-1 flex flex-col bg-white max-lg:rounded-xl max-lg:shadow-lg p-6"
+      >
         <h2 class="text-5xl font-bold text-center mt-10">Seller Sign up</h2>
         <div class="flex-1 p-3">
           <form @submit="submitForm" class="flex flex-col gap-3">
@@ -404,10 +422,7 @@ watch(userData, () => {
                 <option :value="''">
                   {{ "Select bank" }}
                 </option>
-                <option
-                  v-for="bankName of BANK_NAMES"
-                  :value="bankName"
-                >
+                <option v-for="bankName of BANK_NAMES" :value="bankName">
                   {{ bankName }}
                 </option>
               </select>
@@ -460,63 +475,80 @@ watch(userData, () => {
                 <span class="text-red-500 text-xl">*</span>
                 National ID Card Images
               </label>
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-1">
-              <div class="flex flex-col gap-2 relative">
-                <span 
-                  v-if="userData.idCardImageFront" 
-                  class="z-50 -top-3 -right-3 absolute flex justify-center items-center cursor-pointer size-8 bg-white shadow-xl rounded-full hover:size-9 transition-all" 
-                  @click="handleRemoveidCardNumberImage('FRONT')"
-                >
-                  X
-                </span>
-                <img
-                  :src="userData.idCardImageFront?.preview || placeHolder"
-                  alt="sale item"
-                  :class="'shadow-md'"
-                />
-                <label
-                  htmlFor="image-upload-front"
-                  className="itbms-upload-button primary-btn max-w-[200px]"
-                >
-                  upload front image
-                </label>
-                <input
-                  id="image-upload-front"
-                  type="file"
-                  accept="image/*"
-                  @change="(e) => handleSelectidCardImage(e, 'FRONT')"
-                  className="hidden"
-                />
-              </div>
 
-              <div class="flex flex-col gap-2 relative">
-                <span 
-                  v-if="userData.idCardImageBack" 
-                  class="z-50 -top-3 -right-3 absolute flex justify-center items-center cursor-pointer size-8 bg-white shadow-xl rounded-full hover:size-9 transition-all" 
-                  @click="handleRemoveidCardNumberImage('BACK')"
-                >
-                  X
-                </span>
-                <img
-                  :src="userData.idCardImageBack?.preview || placeHolder"
-                  alt="sale item"
-                  :class="'shadow-md'"
-                />
-                <label
-                  htmlFor="image-upload-back"
-                  className="itbms-upload-button primary-btn max-w-[200px]"
-                >
-                  upload back image
-                </label>
-                <input
-                  id="image-upload-back"
-                  type="file"
-                  accept="image/*"
-                  @change="(e) => handleSelectidCardImage(e, 'BACK')"
-                  className="hidden"
-                />
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <!-- Front Side -->
+                <div class="flex flex-col gap-2 relative">
+                  <span
+                    v-if="userData.idCardImageFront"
+                    class="z-50 -top-3 -right-3 absolute flex justify-center items-center cursor-pointer size-8 bg-white shadow-xl rounded-full hover:size-9 transition-all"
+                    @click="handleRemoveidCardNumberImage('FRONT')"
+                  >
+                    X
+                  </span>
+                  
+                  <div
+                    class="overflow-hidden rounded-lg shadow-md aspect-[4/3]"
+                  >
+                    <img
+                      :src="userData.idCardImageFront?.preview || placeHolder"
+                      alt="front id card"
+                      class="w-full h-full object-cover"
+                      @error="(e) => (e.target.src = placeHolder)"
+                    />
+                  </div>
+
+                  <label
+                    for="image-upload-front"
+                    class="itbms-upload-button primary-btn max-w-[200px]"
+                  >
+                    Upload Front Image
+                  </label>
+                  <input
+                    id="image-upload-front"
+                    type="file"
+                    accept="image/*"
+                    @change="(e) => handleSelectidCardImage(e, 'FRONT')"
+                    class="hidden"
+                  />
+                </div>
+
+                <!-- Back Side -->
+                <div class="flex flex-col gap-2 relative">
+                  <span
+                    v-if="userData.idCardImageBack"
+                    class="z-50 -top-3 -right-3 absolute flex justify-center items-center cursor-pointer size-8 bg-white shadow-xl rounded-full hover:size-9 transition-all"
+                    @click="handleRemoveidCardNumberImage('BACK')"
+                  >
+                    X
+                  </span>
+
+                  <div
+                    class="overflow-hidden rounded-lg shadow-md aspect-[4/3]"
+                  >
+                    <img
+                      :src="userData.idCardImageBack?.preview || placeHolder"
+                      alt="back id card"
+                      class="w-full h-full object-cover"
+                      @error="(e) => (e.target.src = placeHolder)"
+                    />
+                  </div>
+
+                  <label
+                    for="image-upload-back"
+                    class="itbms-upload-button primary-btn max-w-[200px]"
+                  >
+                    Upload Back Image
+                  </label>
+                  <input
+                    id="image-upload-back"
+                    type="file"
+                    accept="image/*"
+                    @change="(e) => handleSelectidCardImage(e, 'BACK')"
+                    class="hidden"
+                  />
+                </div>
               </div>
-             </div>
             </div>
 
             <div class="flex flex-col gap-3 mt-5">
