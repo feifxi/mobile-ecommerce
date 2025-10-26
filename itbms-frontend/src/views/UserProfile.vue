@@ -273,8 +273,8 @@ const sendResetPasswordRequest = async () => {
 
   <ConfirmModal
     v-if="showConfirmDialog"
-    :title="'Reset Password?'"
-    :message="`Are you sure, you want to reset password?`"
+    :title="'Reset Password'"
+    :message="'Are you sure you want to reset your password?'"
     :button-label="'Reset'"
     @confirm="sendResetPasswordRequest"
     @cancel="handleCloseDialog"

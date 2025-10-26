@@ -25,7 +25,7 @@ const searchKeyword = ref("");
 
 const handleSearch = () => {
   // close sidebar
-  showSidebar.value = false
+  showSidebar.value = false;
 
   if (searchKeyword.value.trim()) {
     if (route.name !== "SaleItemGallery") {
@@ -475,9 +475,9 @@ const openSidebar = () => {
 
   <ConfirmModal
     v-if="showConfirmSignoutDialog"
-    :title="'Sign out Confirmation'"
-    :message="`Are you sure you want to sign out?`"
-    :button-label="'Sign out'"
+    :title="'Sign Out Confirmation'"
+    :message="'Are you sure you want to sign out?'"
+    :button-label="'Sign Out'"
     @confirm="confirmSignout"
     @cancel="handleCloseSignoutDialog"
   />

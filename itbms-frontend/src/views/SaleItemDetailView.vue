@@ -302,8 +302,8 @@ onMounted(async () => {
 
   <ConfirmModal
     v-if="showLoginSuggestDialog"
-    :title="'Login require'"
-    :message="`Login is require before added item to cart`"
+    :title="'Sign in required'"
+    :message="'You need to sign in before adding items to your cart.'"
     :button-label="'Sign in'"
     @confirm="goToSignin"
     @cancel="handleCloseDialog"

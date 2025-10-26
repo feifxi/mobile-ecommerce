@@ -76,7 +76,7 @@ const confirmDelete = async () => {
       {{ props.item.color || "-" }}
     </div>
     <div class="itbms-price break-words whitespace-normal overflow-hidden px-1">
-      {{ '฿' + formatNumber(props.item.price) }}
+      {{ "฿" + formatNumber(props.item.price) }}
     </div>
     <div class="col-span-2 flex justify-center gap-2 flex-wrap">
       <RouterLink :to="`/sale-items/${props.item.id}/edit`">
@@ -224,8 +224,8 @@ const confirmDelete = async () => {
 
   <DeleteConfirmModal
     v-if="showConfirmDialog"
-    :title="'Delete Confirmation'"
-    :message="`Do you want to delete this sale item?`"
+    :title="'Delete Item'"
+    :message="'Are you sure you want to delete this sale item?'"
     :button-label="'Delete'"
     @confirm="confirmDelete"
     @cancel="showConfirmDialog = false"

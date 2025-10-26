@@ -10,7 +10,7 @@ import { useRouter } from "vue-router";
 
 const auth = useAuthStore();
 const statusMessageStore = useStatusMessageStore();
-const router = useRouter()
+const router = useRouter();
 
 const isShowingChatbot = ref(false);
 const inputMessage = ref("");
@@ -80,23 +80,23 @@ const handleCloseDialog = () => {
 
 const goToSignin = async () => {
   handleCloseDialog();
-  isShowingChatbot.value = false
+  isShowingChatbot.value = false;
   router.push({ name: "login" });
 };
 
 // Close chatbot when clicking outside
 const handleClickOutside = (event) => {
-  const chatbot = event.target.closest('.itbms-chatbot')
-  if (!chatbot) isShowingChatbot.value = false
-}
+  const chatbot = event.target.closest(".itbms-chatbot");
+  if (!chatbot) isShowingChatbot.value = false;
+};
 
 onMounted(async () => {
-  document.addEventListener('click', handleClickOutside)
-})
+  document.addEventListener("click", handleClickOutside);
+});
 
 onBeforeUnmount(() => {
-  document.removeEventListener('click', handleClickOutside)
-})
+  document.removeEventListener("click", handleClickOutside);
+});
 
 watch(
   messages,
@@ -107,7 +107,6 @@ watch(
   },
   { deep: true }
 );
-
 </script>
 
 <template>
@@ -236,9 +235,9 @@ watch(
 
   <ConfirmModal
     v-if="showLoginSuggestDialog"
-    :title="'Login require'"
-    :message="`Login is require to use this feature`"
-    :button-label="'Sign in'"
+    :title="'Sign In Required'"
+    :message="'You need to sign in to use this feature.'"
+    :button-label="'Sign In'"
     @confirm="goToSignin"
     @cancel="handleCloseDialog"
   />

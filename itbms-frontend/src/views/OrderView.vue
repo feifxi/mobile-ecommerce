@@ -283,7 +283,7 @@ watch(
         "
         class="px-6 py-2 rounded-l-lg font-semibold transition-colors duration-300"
       >
-        BUYER VIEW
+        My Orders
       </button>
       <button
         @click="currentTab = 'SELLER'"
@@ -294,7 +294,7 @@ watch(
         "
         class="px-6 py-2 rounded-r-lg font-semibold transition-colors duration-300"
       >
-        SELLER VIEW
+        Customer Orders
       </button>
     </div>
 

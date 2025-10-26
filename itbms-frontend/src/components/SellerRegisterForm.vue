@@ -278,7 +278,7 @@ watch(userData, () => {
       <div
         class="flex-1 flex flex-col bg-white max-lg:rounded-xl max-lg:shadow-lg p-6"
       >
-        <h2 class="text-5xl font-bold text-center mt-10">Seller Sign up</h2>
+        <h2 class="text-3xl sm:text-5xl font-bold text-center mt-10">Seller Sign up</h2>
         <div class="flex-1 p-3">
           <form @submit="submitForm" class="flex flex-col gap-3">
             <!-- User Data Form -->

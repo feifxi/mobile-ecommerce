@@ -233,9 +233,9 @@ const calculateWinner = () => {
 
   <ConfirmModal
     v-if="showLoginSuggestDialog"
-    :title="'Login require'"
-    :message="`Login is require to use this feature`"
-    :button-label="'Sign in'"
+    :title="'Sign In Required'"
+    :message="'You need to sign in to use this feature.'"
+    :button-label="'Sign In'"
     @confirm="goToSignin"
     @cancel="handleCloseDialog"
   />

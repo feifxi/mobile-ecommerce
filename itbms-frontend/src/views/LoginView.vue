@@ -153,7 +153,7 @@ watch(userData, () => {
           class="flex-1 flex flex-col bg-white max-lg:rounded-xl max-lg:shadow-lg p-6"
         >
           <div class="flex-1 p-3 flex flex-col">
-            <h2 class="text-5xl font-bold text-center mt-10">Sign in</h2>
+            <h2 class="text-3xl sm:text-5xl font-bold text-center mt-10">Sign in</h2>
             <!-- User Data Form -->
             <form @submit="submitForm" class="flex flex-col gap-3">
               <div class="flex flex-col gap-1">
