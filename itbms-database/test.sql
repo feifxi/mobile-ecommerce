@@ -15,7 +15,6 @@ SELECT * FROM orders;
 SELECT * FROM order_items;
 SELECT * FROM payments;
 
-
 -- Email Verified Exipires user
 SELECT * FROM users u WHERE u.verification_token_expiry < NOW();
 
@@ -34,7 +33,7 @@ UPDATE user_roles SET role_id = 1 WHERE user_id = 1;
 -- add role
 INSERT INTO user_roles VALUES (8,1);
 
-DELETE FROM refresh_tokens;
+DELETE FROM users where id = 4;
 
 SET SQL_SAFE_UPDATES = 0;
 

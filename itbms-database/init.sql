@@ -24,6 +24,8 @@ CREATE TABLE IF NOT EXISTS `ms3_itbms_db`.`users` (
     status ENUM('ACTIVE','INACTIVE') DEFAULT 'INACTIVE',
     verification_token VARCHAR(255),
     verification_token_expiry DATETIME,
+    reset_pass_token VARCHAR(255),
+    reset_pass_token_expiry DATETIME,
     created_on DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_on DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     INDEX idx_email (email)
@@ -119,6 +121,8 @@ CREATE TABLE IF NOT EXISTS `ms3_itbms_db`.`orders` (
     shipping_address_note TEXT,
     created_on DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_on DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    buyer_viewed BOOLEAN NOT NULL DEFAULT FALSE,
+    seller_viewed BOOLEAN NOT NULL DEFAULT FALSE,
     FOREIGN KEY (buyer_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (seller_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (address_id) REFERENCES addresses(id) ON DELETE CASCADE,

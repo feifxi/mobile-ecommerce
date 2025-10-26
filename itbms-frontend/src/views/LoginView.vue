@@ -29,7 +29,7 @@ const fieldIntegrity = {
     checkConstraint: (data) => {
       return (
         0 < data.length &&
-        data.length <= 40 &&
+        data.length <= 50 &&
         /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(data)
       );
     },
@@ -96,6 +96,11 @@ const submitForm = async (e) => {
   }
   isSubmitting.value = false;
 };
+
+const forgotPassword = async () => {
+  router.push({ name: "forgotPassword" });
+};
+
 
 const goBackHome = () => {
   router.push("/sale-items");
@@ -200,8 +205,15 @@ watch(userData, () => {
                   {{ errorFormMessage["password"] }}
                 </p>
               </div>
+              <button
+                  type="button"
+                  @click="forgotPassword"
+                  class="text-purple-600 cursor-pointer hover:underline self-end"
+                >
+                  Forgot password?
+              </button>
 
-              <div class="flex flex-col gap-3 mt-5">
+              <div class="flex flex-col gap-3">
                 <Button
                   variant="primary"
                   :onclick="submitForm"
@@ -216,7 +228,7 @@ watch(userData, () => {
                   @click="navigateToRegister"
                   class="text-purple-600 cursor-pointer hover:underline"
                 >
-                  dont have an account?
+                  Dont have an account?
                 </button>
               </div>
             </form>

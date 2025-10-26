@@ -533,7 +533,7 @@ watch(userData, () => {
                 @click="navigateToLogin"
                 class="text-purple-600 cursor-pointer hover:underline"
               >
-                already have an account?
+                Already have an account?
               </button>
             </div>
           </form>

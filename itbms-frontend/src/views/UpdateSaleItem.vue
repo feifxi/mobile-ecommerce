@@ -9,6 +9,7 @@ import { useStatusMessageStore } from "@/stores/statusMessage";
 import { ChevronDown, ChevronUp, X } from "lucide-vue-next";
 import placeHolder from "@/assets/placeholder.svg";
 import { useAuthStore } from "@/stores/auth";
+import ConfirmModal from "@/components/ConfirmModal.vue";
 
 const BASE_API = import.meta.env.VITE_BASE_API;
 const IMAGE_ENDPOINT = BASE_API + "/v1/sale-items/images/";
@@ -214,8 +215,12 @@ const showErrorToForm = () => {
   }
 };
 
-const submitForm = async (e) => {
+const handleSubmit = (e) => {
   e.preventDefault();
+  handleShowDialog();
+};
+
+const saveChanges = async () => {
   isSubmitting.value = true;
   try {
     saleItem.value.brand.name = brands.value.find(
@@ -247,7 +252,7 @@ const submitForm = async (e) => {
 
     const res = await updateSaleItem(id, formData, auth);
     const result = await res.json();
-    console.log(result);
+    // console.log(result);
     if (!res.ok) throw new Error("Something went wrong");
     statusMessageStore.setStatusMessage("The sale item has been updated.");
   } catch (err) {
@@ -373,6 +378,17 @@ watch(
   },
   { deep: true }
 );
+
+// Confirm modal
+const showConfirmSaveDialog = ref(false);
+
+const handleShowDialog = () => {
+  showConfirmSaveDialog.value = true;
+};
+
+const handleCloseDialog = () => {
+  showConfirmSaveDialog.value = false;
+};
 </script>
 
 <template>
@@ -400,35 +416,49 @@ watch(
         class="itbms-row max-w-6xl mx-auto flex max-lg:flex-col flex-wrap gap-12 bg-white rounded-lg shadow-lg p-6"
       >
         <div class="flex-1 flex flex-col gap-4">
-          <div class="text-center overflow-hidden rounded-lg shadow-md">
+          <!-- Main Image Preview -->
+          <div
+            class="text-center overflow-hidden rounded-lg shadow-md aspect-square"
+          >
             <img
               :src="
                 saleItemImageFiles[selectedImageIndex]?.preview || placeHolder
               "
               alt="sale item"
-              class="w-full h-auto hover:scale-105 transition-transform duration-300"
+              class="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+              @error="(event) => (event.target.src = placeHolder)"
             />
           </div>
+
+          <!-- Thumbnails -->
           <div class="grid grid-cols-4 gap-1">
-            <img
-              v-for="i of [0, 1, 2, 3]"
-              @click="() => handleChangeSelectedImage(i)"
-              :src="saleItemImageFiles[i]?.preview || placeHolder"
-              alt="sale item"
+            <div
+              v-for="i in [0, 1, 2, 3]"
+              :key="i"
+              class="aspect-square overflow-hidden rounded-md shadow-md cursor-pointer"
               :class="
-                'shadow-md ' +
-                (saleItemImageFiles.length > 0 && i == selectedImageIndex
-                  ? 'border-5 cursor-pointer border-purple-600'
-                  : '')
+                saleItemImageFiles.length > 0 && i == selectedImageIndex
+                  ? 'ring-2 ring-purple-600'
+                  : ''
               "
-            />
+              @click="() => handleChangeSelectedImage(i)"
+            >
+              <img
+                :src="saleItemImageFiles[i]?.preview || placeHolder"
+                alt="sale item"
+                class="w-full h-full object-cover"
+                @error="(event) => (event.target.src = placeHolder)"
+              />
+            </div>
           </div>
+
+          <!-- Upload Button -->
           <div>
             <label
-              htmlFor="image-upload"
-              className="itbms-upload-button primary-btn max-w-[150px]"
+              for="image-upload"
+              class="itbms-upload-button primary-btn max-w-[180px]"
             >
-              upload image
+              Upload Image
             </label>
             <input
               id="image-upload"
@@ -436,12 +466,15 @@ watch(
               multiple
               accept="image/*"
               @change="handleFileSelect"
-              className="hidden"
+              class="hidden"
             />
           </div>
+
+          <!-- Image List with Controls -->
           <div class="flex flex-col gap-2">
             <div
               v-for="(image, index) in saleItemImageFiles"
+              :key="index"
               class="py-2 rounded-full font-medium transition-all duration-300 flex items-center justify-center gap-2 bg-purple-100 text-purple-600 px-6"
             >
               <p :class="`itbms-picture-file${index + 1}`">
@@ -451,12 +484,16 @@ watch(
                     : mappedToOriginalFileName(image.file.name)
                 }}
               </p>
+
+              <!-- Remove Button -->
               <X
                 @click="() => handleRemoveImage(image.file.name)"
                 :class="`itbms-picture-file${
                   index + 1
                 }-clear hover:text-white ml-auto size-6 cursor-pointer hover:bg-purple-600 transition-all rounded-full`"
               />
+
+              <!-- Reorder Controls -->
               <div class="flex flex-col">
                 <ChevronUp
                   v-if="index != 0"
@@ -474,7 +511,7 @@ watch(
         </div>
 
         <div class="flex-1 p-3">
-          <form @submit="submitForm" class="flex flex-col gap-3">
+          <form @submit="handleSubmit" class="flex flex-col gap-3">
             <div class="flex flex-col gap-1">
               <label>
                 <span class="text-red-500 text-xl">*</span>
@@ -638,7 +675,6 @@ watch(
             <div class="flex gap-3 items-center mt-5">
               <Button
                 variant="primary"
-                :onclick="submitForm"
                 :disabled="isSubmitting || !isFormValid"
                 class-name="itbms-save-button"
                 type="submit"
@@ -660,4 +696,13 @@ watch(
       </div>
     </div>
   </main>
+
+  <ConfirmModal
+    v-if="showConfirmSaveDialog"
+    :title="'Confirm Save'"
+    :message="`Save current changes?`"
+    :button-label="'Save'"
+    @confirm="saveChanges"
+    @cancel="handleCloseDialog"
+  />
 </template>

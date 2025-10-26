@@ -70,7 +70,7 @@ public class EmailService {
         mailSender.send(message);
     }
 
-    public void sendPasswordResetEmail(String to, String token) throws MessagingException, UnsupportedEncodingException {
+    public void sendResetPasswordEmail(String to, String token) throws MessagingException, UnsupportedEncodingException {
         String hostPath = frontendUrl;
         String resetUrl = hostPath + "/" + teamCode + "/reset-password?token=" + token;
 

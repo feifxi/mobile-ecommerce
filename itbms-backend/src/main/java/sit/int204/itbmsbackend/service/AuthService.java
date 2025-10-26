@@ -76,7 +76,6 @@ public class AuthService {
         }
     }
 
-
     @Transactional
     public User registerUser(RegisterRequest request) throws MessagingException, UnsupportedEncodingException {
         User existUser = userRepository.findOneByEmail(request.getEmail()).orElse(null);
@@ -153,6 +152,7 @@ public class AuthService {
         return newUser;
     }
 
+    @Transactional
     public AuthTokenResponse authenticateUser(LoginRequest loginRequest) {
         User existUser = userRepository.findOneByEmail(loginRequest.getEmail()).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Email not found."));
@@ -193,7 +193,7 @@ public class AuthService {
         );
     }
 
-    @PostMapping("/refresh")
+    @Transactional
     public RefreshTokenResponse refreshToken(String refreshToken) {
         return refreshTokenService.findByToken(refreshToken)
                 .map(refreshTokenService::verifyExpiration)
@@ -206,10 +206,11 @@ public class AuthService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED,"Refresh token not found."));
     }
 
+    @Transactional
     public void emailVerification(String verifiedToken) {
         User user = userRepository.findOneByVerificationToken(verifiedToken).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid token."));
-        if (user.getVerificationTokenExpiry().isBefore(LocalDateTime.now())) {
+        if (user.getVerificationTokenExpiry() == null || user.getVerificationTokenExpiry().isBefore(LocalDateTime.now())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The token has expires, please try register again.");
         }
         user.setStatus(UserStatus.ACTIVE);
@@ -233,20 +234,60 @@ public class AuthService {
         return response;
     }
 
+    @Transactional
     public void logoutUser(User user) {
         // Remove user refresh token in db
         refreshTokenService.deleteByUser(user);
     }
 
+    @Transactional
+    public void requestPasswordReset(String email) throws MessagingException, UnsupportedEncodingException {
+        User user = userRepository.findOneByEmail(email)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Email not found."));
 
-    /**
-     * Scheduled job to delete user with expired token every 24 hour.
-     */
+        if (user.getStatus().equals(UserStatus.INACTIVE)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User is not verify email.");
+        }
+
+        // Generate a new token
+        String resetToken = UUID.randomUUID().toString();
+        user.setResetPassToken(resetToken);
+        user.setResetPassTokenExpiry(LocalDateTime.now().plusHours(1)); // valid for 1 hour
+        userRepository.save(user);
+
+        // Send reset email (reuse your email service)
+        emailService.sendResetPasswordEmail(user.getEmail(), resetToken);
+    }
+
+    @Transactional
+    public void resetPassword(String token, String newPassword) {
+        User user = userRepository.findOneByResetPassToken(token)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid token."));
+
+        if (user.getStatus().equals(UserStatus.INACTIVE)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User is not verify email.");
+        }
+
+        if (user.getResetPassTokenExpiry() == null || user.getResetPassTokenExpiry().isBefore(LocalDateTime.now())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The token has expired.");
+        }
+
+        // Update password
+        user.setPassword(encoder.encode(newPassword));
+
+        // Clear the token fields
+        user.setResetPassToken(null);
+        user.setResetPassTokenExpiry(null);
+        userRepository.save(user);
+    }
+
+
+    // Scheduled job to delete user with expired token every 24 hour.
     @Scheduled(fixedRate = 24 * 60 * 60 * 1000)
     @Transactional
     public void cleanupNonVerifiedUsers() {
         System.out.println(":: Cleaning up non-verified users : " + LocalDateTime.now());
-        List<User> users = userRepository.findAllByExpiresToken(LocalDateTime.now());
+        List<User> users = userRepository.findAllByExpiresVerificationToken(LocalDateTime.now());
         for (User user : users) {
             // remove id card image from storage
             if (UserType.SELLER.equals(user.getUserType()) &&
@@ -257,5 +298,17 @@ public class AuthService {
             }
         }
         userRepository.deleteNonVerifiedUsers(LocalDateTime.now());
+    }
+
+    // Scheduled job to clear all reset password token field with expired token every 24 hour.
+    @Scheduled(fixedRate = 24 * 60 * 60 * 1000)
+    @Transactional
+    public void cleanupExpiredResetTokens() {
+        List<User> users = userRepository.findAllByResetPassToken(LocalDateTime.now());
+        for (User user : users) {
+            user.setResetPassToken(null);
+            user.setResetPassTokenExpiry(null);
+        }
+        userRepository.saveAll(users);
     }
 }

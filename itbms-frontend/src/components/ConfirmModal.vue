@@ -20,7 +20,7 @@ const emit = defineEmits(['confirm', 'cancel'])
 </script>
 
 <template>
-  <div class="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50">
+  <div class="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 max-sm:px-2">
     <div class="bg-white/90 p-6 rounded-2xl shadow-2xl max-w-md w-full text-center animate-fade-in border border-gray-100">
       <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-rose-100 to-purple-100 flex items-center justify-center">
         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-alert-triangle text-rose-600"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>

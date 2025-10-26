@@ -19,6 +19,8 @@ import CartView from '@/views/CartView.vue'
 import UpdateUserProfile from '@/views/UpdateUserProfile.vue'
 import OrderView from '@/views/OrderView.vue'
 import OrderDetailView from '@/views/OrderDetailView.vue'
+import ResetPasswordView from '@/views/ResetPasswordView.vue'
+import ForgotPasswordView from '@/views/ForgotPasswordView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -52,6 +54,16 @@ const router = createRouter({
       path: '/verify-email',
       name: 'verifyEmail',
       component: EmailVerificationView,
+    },
+    {
+      path: '/forgot-password',
+      name: 'forgotPassword',
+      component: ForgotPasswordView,
+    },
+    {
+      path: '/reset-password',
+      name: 'resetPassword',
+      component: ResetPasswordView,
     },
     {
       path: '/sale-items/add',

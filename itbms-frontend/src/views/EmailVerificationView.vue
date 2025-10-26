@@ -43,11 +43,9 @@ onMounted(() => {
 <template>
   <main class="px-4 sm:px-16 py-8">
     <div class="bg-white rounded-xl shadow">
-      <div
-        v-if="isLoading"
-        class="text-center text-blue-500 animate-pulse text-3xl font-bold"
-      >
-        Loading...
+      <div v-if="isLoading" class="text-center py-16">
+        <div class="inline-block animate-spin rounded-full h-16 w-16 border-4 border-purple-200 border-t-purple-600 mb-4"></div>
+        <p class="text-gray-600 text-lg">Loading...</p>
       </div>
 
       <div v-else-if="isSuccess">

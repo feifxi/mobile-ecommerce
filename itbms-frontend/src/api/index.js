@@ -160,6 +160,20 @@ export const verifyEmail = async (token) => {
   });
 };
 
+export const requestResetPassword = async (email) => {
+  return await fetch(`${BASE_API}/v2/auth/request-reset-password?email=${email}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+  });
+};
+
+export const resetPassword = async (token, newPassword) => {
+  return await fetch(`${BASE_API}/v2/auth/reset-password?token=${token}&newPassword=${newPassword}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+  });
+};
+
 export const fetchUserProfile = async (authStore) => {
   return await fetchWithAuth(`/v2/users/${authStore.user.id}`, {}, authStore)
 }
@@ -237,6 +251,13 @@ export const getOrderBySellerId = async (authStore, page = 0, size = 10, sortFie
 
 export const getOrderItemsById = async (orderId, authStore) => {
   return await fetchWithAuth(`/v2/orders/${orderId}`, {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+  }, authStore);
+}
+
+export const getUnviewedOrderCount = async (userType = "BUYER", authStore) => {
+  return await fetchWithAuth(`/v2/orders/unviewed-count?userType=${userType}`, {
     method: "GET",
     headers: { "Content-Type": "application/json" },
   }, authStore);

@@ -3,6 +3,7 @@ package sit.int204.itbmsbackend.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import sit.int204.itbmsbackend.constant.OrderStatus;
@@ -61,6 +62,14 @@ public class Order {
     @Column(name = "updated_on", nullable = false)
     private LocalDateTime updatedOn;
 
+    @ColumnDefault("0")
+    @Column(name = "buyer_viewed", nullable = false)
+    private Boolean buyerViewed;
+
+    @ColumnDefault("0")
+    @Column(name = "seller_viewed", nullable = false)
+    private Boolean sellerViewed;
+
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private Set<OrderItem> orderItems = new LinkedHashSet<>();
 
@@ -71,6 +80,8 @@ public class Order {
     protected void onCreate() {
         this.createdOn = LocalDateTime.now();
         this.updatedOn = LocalDateTime.now();
+        this.buyerViewed  = false;
+        this.sellerViewed = false;
     }
 
     @PreUpdate

@@ -113,7 +113,7 @@ watch(
 <template>
   <div
     v-if="isShowingChatbot"
-    class="itbms-chatbot z-50 fixed bottom-0 right-[10%] flex flex-col h-[600px] w-full max-w-sm mx-auto border border-neutral-300 rounded-lg overflow-hidden bg-white"
+    class="itbms-chatbot z-50 fixed bottom-0 right-0 sm:right-[10%] flex flex-col h-[600px] w-full max-w-sm border border-neutral-300 rounded-lg overflow-hidden bg-white"
   >
     <!-- Header -->
     <div
@@ -218,7 +218,7 @@ watch(
   <div
     v-else
     @click="handleToggleChatbotBox"
-    class="itbms-chatbot z-50 fixed cursor-pointer bottom-0 right-[2%] flex flex-col mx-auto border border-neutral-300 rounded-lg overflow-hidden"
+    class="itbms-chatbot z-50 fixed cursor-pointer bottom-0 right-0 sm:right-[2%] flex flex-col mx-auto border border-neutral-300 rounded-lg overflow-hidden"
   >
     <div
       class="flex items-center gap-3 p-2 border-b border-neutral-300 bg-gradient-to-r from-purple-500 to-rose-500"
@@ -228,7 +228,7 @@ watch(
       >
         <Bot class="w-6 h-6" />
       </div>
-      <div>
+      <div class="max-sm:hidden">
         <h3 class="font-semibold text-white">ChanomBot</h3>
       </div>
     </div>

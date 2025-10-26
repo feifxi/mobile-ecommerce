@@ -1,6 +1,9 @@
 <script setup>
 import { ref, onMounted, reactive, computed, watch } from "vue";
-import { fetchAllSaleItemsBySeller } from "@/api/index.js";
+import {
+  fetchAllSaleItemsBySeller,
+  getUnviewedOrderCount,
+} from "@/api/index.js";
 import CardItemList from "@/components/CardItemList.vue";
 import Button from "@/components/Button.vue";
 import { useRouter } from "vue-router";
@@ -21,7 +24,9 @@ const getSessionStorageItem = (key) => {
   return sessionStorage.getItem(key);
 };
 
-const persistPaginationOptionJSON = getSessionStorageItem("paginationOptionSeller");
+const persistPaginationOptionJSON = getSessionStorageItem(
+  "paginationOptionSeller"
+);
 const persistPaginationOption = persistPaginationOptionJSON
   ? JSON.parse(persistPaginationOptionJSON)
   : {
@@ -38,6 +43,7 @@ const persistSortOption = persistSortOptionJSON
     };
 
 const saleItems = ref([]);
+const unviewedCount = ref(0);
 const isLoading = ref(true);
 
 const pagination = reactive({
@@ -77,6 +83,14 @@ const fetchSaleItems = async () => {
       sortOption.sortField,
       sortOption.sortDirection
     );
+
+    const resUnviewedCount = await getUnviewedOrderCount("SELLER", auth);
+    if (!resUnviewedCount.ok)
+      throw new Error("Failed to fetch unviewed order count");
+
+    const unviewedCountData = await resUnviewedCount.json();
+    unviewedCount.value = unviewedCountData.unviewedOrders;
+    // console.log("Unviewed Order Count:", unviewedCount.value);
 
     if (!res.ok) throw new Error("Failed to fetch");
     const data = await res.json();
@@ -169,8 +183,8 @@ const redirectIfNotSeller = () => {
 };
 
 const goToSellerOrder = () => {
-  sessionStorage.setItem('lastVisitedTabOrderView', 'SELLER')
-}
+  sessionStorage.setItem("lastVisitedTabOrderView", "SELLER");
+};
 
 onMounted(async () => {
   redirectIfNotSeller();
@@ -226,7 +240,7 @@ watch(
         </Button>
       </div>
     </div>
-  
+
     <!-- Loading State -->
     <div v-if="isLoading" class="text-center py-16">
       <div
@@ -248,7 +262,7 @@ watch(
       <!-- Page Size & Sorting Option -->
       <div class="p-3 rounded-xl mb-4 bg-white">
         <div class="flex max-md:flex-col gap-5 md:items-start">
-          <div class="flex-1 flex justify-start gap-3">
+          <div class="flex-1 flex justify-start gap-3 flex-wrap">
             <div class="flex gap-2 items-center">
               <h3>show</h3>
               <select
@@ -305,13 +319,33 @@ watch(
 
             <div class="ml-auto flex items-center mr-5">
               <RouterLink :to="{ name: 'order' }" @click="goToSellerOrder">
-              <button class="relative cursor-pointer">
-                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shopping-cart"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
-                <span v-if="true" class=" min-w-5 min-h-5 cursor-pointer absolute -top-2 -right-2 bg-rose-500 text-white text-xs rounded-full flex items-center justify-center">
-                  {{ 12 }}
-                </span>
-              </button>
-            </RouterLink>
+                <button class="relative cursor-pointer">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="25"
+                    height="25"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="lucide lucide-shopping-cart"
+                  >
+                    <circle cx="8" cy="21" r="1" />
+                    <circle cx="19" cy="21" r="1" />
+                    <path
+                      d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"
+                    />
+                  </svg>
+                  <span
+                    v-if="unviewedCount > 0"
+                    class="min-w-5 min-h-5 cursor-pointer absolute -top-2 -right-2 bg-rose-500 text-white text-xs rounded-full flex items-center justify-center"
+                  >
+                    {{ unviewedCount }}
+                  </span>
+                </button>
+              </RouterLink>
             </div>
           </div>
         </div>
@@ -333,7 +367,7 @@ watch(
 
       <!-- Mobile Header -->
       <div
-        class="md:hidden bg-gradient-to-r from-rose-200 to-rose-100 p-4 font-semibold text-gray-700 text-center"
+        class="md:hidden bg-gradient-to-r from-rose-200 to-rose-100 p-4 font-semibold text-center"
       >
         Sale Items ({{ saleItems.length }})
       </div>

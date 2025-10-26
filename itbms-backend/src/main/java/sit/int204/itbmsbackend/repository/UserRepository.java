@@ -19,8 +19,13 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     Optional<User> findOneByVerificationToken(String verificationToken);
 
+    Optional<User> findOneByResetPassToken(String resetPassToken);
+
     @Query("SELECT u FROM User u WHERE u.verificationTokenExpiry < :now")
-    List<User> findAllByExpiresToken(@Param("now") LocalDateTime now);
+    List<User> findAllByExpiresVerificationToken(@Param("now") LocalDateTime now);
+
+    @Query("SELECT u FROM User u WHERE u.resetPassTokenExpiry < :now")
+    List<User> findAllByResetPassToken(@Param("now") LocalDateTime now);
 
     @Query("SELECT u FROM User u WHERE u.verificationToken = :token AND u.verificationTokenExpiry > :now")
     Optional<User> findByVerificationTokenUnExpires(@Param("token") String token, @Param("now") LocalDateTime now);

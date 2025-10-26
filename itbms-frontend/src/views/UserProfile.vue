@@ -1,79 +1,128 @@
 <script setup>
-import { useRouter } from 'vue-router'
-import { useStatusMessageStore } from '@/stores/statusMessage'
-import { useAuthStore } from '@/stores/auth'
-import { onMounted, ref } from 'vue'
-import { fetchUserProfile, updateUserProfile } from '@/api'
-import placeHolder from '@/assets/placeholder.svg' 
+import { useRouter } from "vue-router";
+import { useStatusMessageStore } from "@/stores/statusMessage";
+import { useAuthStore } from "@/stores/auth";
+import { onMounted, ref } from "vue";
+import {
+  fetchUserProfile,
+  requestResetPassword,
+  updateUserProfile,
+} from "@/api";
+import placeHolder from "@/assets/placeholder.svg";
+import ConfirmModal from "@/components/ConfirmModal.vue";
 
-const BASE_API = import.meta.env.VITE_BASE_API
-const IMAGE_ENDPOINT = BASE_API + "/v2/users/images/"
+const BASE_API = import.meta.env.VITE_BASE_API;
+const IMAGE_ENDPOINT = BASE_API + "/v2/users/images/";
 
-const router = useRouter()
-const statusMessageStore = useStatusMessageStore()
-const auth = useAuthStore()
+const router = useRouter();
+const statusMessageStore = useStatusMessageStore();
+const auth = useAuthStore();
 
-const userProfile = ref(null)
-const isLoading = ref(false)
+const userProfile = ref(null);
+const isLoading = ref(false);
 
 const loadUserProfile = async () => {
   try {
-    isLoading.value = true
-    const res = await fetchUserProfile(auth)
+    isLoading.value = true;
+    const res = await fetchUserProfile(auth);
     if (!res.ok) {
-      throw new Error('Failed to fetch user profile')
+      throw new Error("Failed to fetch user profile");
     }
-    const profile = await res.json()
+    const profile = await res.json();
     // console.log(profile) // print user profile
-    userProfile.value = profile
+    userProfile.value = profile;
   } catch (error) {
-    console.log(error)
+    console.log(error);
   } finally {
-    isLoading.value = false
+    isLoading.value = false;
   }
-}
+};
 
 // Mask numbers: show 2nd, 3rd, 4th digits from end
 const maskNumber = (num) => {
-    if (!num || num.length < 4) return num
-    const str = num.toString()
-    const len = str.length
-    const visible = str.slice(-4, -1)
-    return 'x'.repeat(len - 4) + visible + 'x'
-}
+  if (!num || num.length < 4) return num;
+  const str = num.toString();
+  const len = str.length;
+  const visible = str.slice(-4, -1);
+  return "x".repeat(len - 4) + visible + "x";
+};
 
 onMounted(async () => {
-  loadUserProfile()
-})
+  loadUserProfile();
+});
+
+// Reset password
+const showConfirmDialog = ref(false);
+
+const handleShowDialog = () => {
+  showConfirmDialog.value = true;
+};
+
+const handleCloseDialog = () => {
+  showConfirmDialog.value = false;
+};
+
+const sendResetPasswordRequest = async () => {
+  try {
+    handleCloseDialog();
+    isLoading.value = true;
+    const res = await requestResetPassword(auth.user.email);
+    const data = await res.json();
+    // console.log(data);
+    if (res.ok) {
+      statusMessageStore.setStatusMessage(
+        "Reset password link has been sent to your email."
+      );
+    } else throw new Error("Invalid credential.");
+  } catch (err) {
+    console.log(err);
+  }
+  isLoading.value = false;
+};
 </script>
 
 <template>
   <!-- Loading State -->
-  <div v-if="isLoading" class="min-h-screen bg-gradient-to-br from-rose-100 via-pink-100 to-purple-100 flex justify-center items-center">
-      <div class="text-center">
-          <div class="animate-spin rounded-full h-32 w-32 border-b-2 border-rose-500"></div>
-          <p class="text-rose-500 text-2xl font-bold mt-4">Loading...</p>
-      </div>
+  <div
+    v-if="isLoading"
+    class="min-h-screen bg-gradient-to-br from-rose-100 via-pink-100 to-purple-100 flex justify-center items-center"
+  >
+    <div class="text-center">
+      <div
+        class="animate-spin rounded-full h-32 w-32 border-b-2 border-rose-500"
+      ></div>
+      <p class="text-rose-500 text-2xl font-bold mt-4">Loading...</p>
+    </div>
   </div>
 
   <!-- Profile Content -->
   <div v-else class="itbms-user-profile">
-    <div class="min-h-screen bg-gradient-to-br from-rose-100 via-pink-100 to-purple-100 flex justify-center items-center p-6">
-      <div class="bg-white bg-opacity-80 shadow-2xl shadow-pink-200 rounded-3xl p-10 w-full max-w-2xl border-4 border-pink-100 backdrop-blur-md">
-        <h1 class="text-2xl sm:text-4xl font-extrabold text-rose-500 mb-8 sm:mb-10 text-center tracking-widest drop-shadow-sm">
-            <div class="text-center mb-8">
-              <div class="relative inline-flex justify-center items-center w-48 h-48 bg-gradient-to-br from-pink-400 to-rose-500 rounded-full mb-4 shadow-2xl drop-shadow-2xl">
-                <!-- User head -->
-                <div class="absolute top-5 w-15 h-15 bg-white rounded-full drop-shadow-lg"></div>
-                <!-- User body -->
-                <div class="absolute bottom-6 w-23 h-20 bg-white rounded-t-full drop-shadow-lg"></div>
-              </div>
+    <div
+      class="min-h-screen bg-gradient-to-br from-rose-100 via-pink-100 to-purple-100 flex justify-center items-center p-6"
+    >
+      <div
+        class="bg-white bg-opacity-80 shadow-2xl shadow-pink-200 rounded-3xl p-10 w-full max-w-2xl border-4 border-pink-100 backdrop-blur-md"
+      >
+        <h1
+          class="text-2xl sm:text-4xl font-extrabold text-rose-500 mb-8 sm:mb-10 text-center tracking-widest drop-shadow-sm"
+        >
+          <div class="text-center mb-8">
+            <div
+              class="relative inline-flex justify-center items-center w-48 h-48 bg-gradient-to-br from-pink-400 to-rose-500 rounded-full mb-4 shadow-2xl drop-shadow-2xl"
+            >
+              <!-- User head -->
+              <div
+                class="absolute top-5 w-15 h-15 bg-white rounded-full drop-shadow-lg"
+              ></div>
+              <!-- User body -->
+              <div
+                class="absolute bottom-6 w-23 h-20 bg-white rounded-t-full drop-shadow-lg"
+              ></div>
             </div>
-          <span class="inline-flex items-center gap-2">
-            User Profile
-          </span>
+          </div>
+          <span class="inline-flex items-center gap-2"> User Profile </span>
         </h1>
-        
+
         <div class="space-y-6">
           <!-- Nickname -->
           <div>
@@ -81,8 +130,9 @@ onMounted(async () => {
               Nickname
             </label>
             <div
-              class="itbms-nickname w-full p-3 border border-pink-200 rounded-full bg-pink-50 shadow-inner text-gray-700">
-              {{ userProfile?.nickname || '-' }}
+              class="itbms-nickname w-full p-3 border border-pink-200 rounded-full bg-pink-50 shadow-inner text-gray-700"
+            >
+              {{ userProfile?.nickname || "-" }}
             </div>
           </div>
 
@@ -92,8 +142,9 @@ onMounted(async () => {
               Email
             </label>
             <div
-              class="itbms-email w-full p-3 border border-pink-200 rounded-full bg-pink-50 shadow-inner text-gray-700">
-              {{ userProfile?.email || '-' }}
+              class="itbms-email w-full p-3 border border-pink-200 rounded-full bg-pink-50 shadow-inner text-gray-700"
+            >
+              {{ userProfile?.email || "-" }}
             </div>
           </div>
 
@@ -103,8 +154,9 @@ onMounted(async () => {
               Fullname
             </label>
             <div
-              class="itbms-fullname w-full p-3 border border-purple-200 rounded-full bg-purple-50 shadow-inner text-gray-700">
-              {{ userProfile?.fullName || '-' }}
+              class="itbms-fullname w-full p-3 border border-purple-200 rounded-full bg-purple-50 shadow-inner text-gray-700"
+            >
+              {{ userProfile?.fullName || "-" }}
             </div>
           </div>
 
@@ -114,8 +166,9 @@ onMounted(async () => {
               Type
             </label>
             <div
-              class="itbms-type w-full p-3 border border-pink-200 rounded-full bg-pink-50 shadow-inner text-gray-700">
-              {{ userProfile?.userType || '-' }}
+              class="itbms-type w-full p-3 border border-pink-200 rounded-full bg-pink-50 shadow-inner text-gray-700"
+            >
+              {{ userProfile?.userType || "-" }}
             </div>
           </div>
 
@@ -136,8 +189,9 @@ onMounted(async () => {
                 Phone
               </label>
               <div
-                class="itbms-mobile w-full p-3 border border-pink-200 rounded-full bg-pink-50 shadow-inner text-gray-700">
-                {{ userProfile?.phone ? maskNumber(userProfile.phone) : '-' }}
+                class="itbms-mobile w-full p-3 border border-pink-200 rounded-full bg-pink-50 shadow-inner text-gray-700"
+              >
+                {{ userProfile?.phone ? maskNumber(userProfile.phone) : "-" }}
               </div>
             </div>
 
@@ -146,8 +200,13 @@ onMounted(async () => {
                 Bank Account Number
               </label>
               <div
-                class="itbms-bankAccount w-full p-3 border border-pink-200 rounded-full bg-pink-50 shadow-inner text-gray-700">
-                {{ userProfile?.bankAccountNumber ? maskNumber(userProfile.bankAccountNumber) :'-' }}
+                class="itbms-bankAccount w-full p-3 border border-pink-200 rounded-full bg-pink-50 shadow-inner text-gray-700"
+              >
+                {{
+                  userProfile?.bankAccountNumber
+                    ? maskNumber(userProfile.bankAccountNumber)
+                    : "-"
+                }}
               </div>
             </div>
 
@@ -156,12 +215,11 @@ onMounted(async () => {
                 Bank
               </label>
               <div
-                class="itbms-bankName w-full p-3 border border-pink-200 rounded-full bg-pink-50 shadow-inner text-gray-700">
-                {{ userProfile?.bankName || '-' }}
+                class="itbms-bankName w-full p-3 border border-pink-200 rounded-full bg-pink-50 shadow-inner text-gray-700"
+              >
+                {{ userProfile?.bankName || "-" }}
               </div>
             </div>
-
-
 
             <!-- <div>
               <label class="block text-purple-700 font-semibold mb-2">
@@ -172,7 +230,7 @@ onMounted(async () => {
                 {{ userProfile?.idCardNumber || '-' }}
               </div>
             </div> -->
-            
+
             <!-- National id card image -->
             <!-- <label class="block text-purple-700 font-semibold mb-2">
               National ID Card
@@ -191,19 +249,34 @@ onMounted(async () => {
             </div> -->
           </div>
 
-          
-
           <!-- Edit Button -->
-        <div class="mt-8 flex justify-end">
-          <router-link to="/profile/edit">
-            <button 
-              class="itbms-profile-button bg-red-400 text-white font-bold py-3 px-8 rounded-full shadow-lg hover:bg-red-600 transition">
-              Edit
+          <div class="mt-8 flex justify-end gap-3">
+            <button
+              @click="handleShowDialog"
+              class="itbms-profile-button max-sm:text-sm cursor-pointer bg-rose-500 text-white font-bold py-3 px-4 sm:px-8 rounded-full shadow-lg hover:bg-red-600 transition"
+            >
+              Reset Password
             </button>
-          </router-link>
+
+            <router-link to="/profile/edit">
+              <button
+                class="itbms-profile-button max-sm:text-sm cursor-pointer bg-red-400 text-white font-bold py-3 px-4 sm:px-8 rounded-full shadow-lg hover:bg-red-600 transition"
+              >
+                Edit Profile
+              </button>
+            </router-link>
+          </div>
         </div>
-       </div>
       </div>
     </div>
   </div>
+
+  <ConfirmModal
+    v-if="showConfirmDialog"
+    :title="'Reset Password?'"
+    :message="`Are you sure, you want to reset password?`"
+    :button-label="'Reset'"
+    @confirm="sendResetPasswordRequest"
+    @cancel="handleCloseDialog"
+  />
 </template>

@@ -131,4 +131,16 @@ public class AuthController {
         UserDetailsResponse response = authService.checkUserIdentity(userPrincipal.getId());
         return ResponseEntity.ok(response);
     }
+
+    @PostMapping("/request-reset-password")
+    public ResponseEntity<ApiResponse> forgotPassword(@RequestParam String email) throws MessagingException, UnsupportedEncodingException {
+        authService.requestPasswordReset(email);
+        return ResponseEntity.ok(new ApiResponse(true, "If your email exists, a reset link has been sent."));
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<ApiResponse> resetPassword(@RequestParam String token, @RequestParam String newPassword) {
+        authService.resetPassword(token, newPassword);
+        return ResponseEntity.ok(new ApiResponse(true, "Password reset successful."));
+    }
 }

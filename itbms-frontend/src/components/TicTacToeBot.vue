@@ -33,14 +33,14 @@ const handleClick = async (index) => {
     // Winner
     if (calculateWinner()) {
       isEndGame.value = true
-      botMessage.value = "Just lucky noob, let try again!!"
+      botMessage.value = "Just lucky, let try again!!"
       return
     } 
     // Withdraw
     else if (choices.value.every(choice => choice !== "")) {
       isEndGame.value = true
       isWithDraw.value = true
-      botMessage.value = "Nahhh.. Let try again noob"
+      botMessage.value = "Nahhh.. Let try again"
       return
     }
     const emptySlot = choices.value.map((v,i ) => v === "" ? i : null).filter(i => i !== null);
@@ -94,7 +94,7 @@ const handleClick = async (index) => {
     if (calculateWinner()) {
       isEndGame.value = true
       isLoading.value = false;
-      botMessage.value = "Muhahaha Loser"
+      botMessage.value = "Muhahaha"
       return
     } 
     // Withdraw
@@ -102,7 +102,7 @@ const handleClick = async (index) => {
       isEndGame.value = true
       isWithDraw.value = true
       isLoading.value = false;
-      botMessage.value = "Nahhh.. Let try again noob"
+      botMessage.value = "Nahhh.. Let try again"
       return
     }
 
@@ -167,7 +167,7 @@ const calculateWinner = () => {
 <template>
   <section
     v-if="isShowingGame"
-    class="z-50 fixed top-0 left-0 bg-black/80 w-full h-screen flex flex-col justify-center items-center gap-10"
+    class="z-50 fixed top-0 left-0 bg-black/80 w-full h-screen flex flex-col justify-center items-center gap-10 max-sm:px-2"
   >
     <!-- Chat Avatar -->
     <div class="flex items-start gap-1" >
@@ -227,7 +227,7 @@ const calculateWinner = () => {
     </div>
   </section>
 
-  <div @click="isShowingGame = true" v-else class="z-50 fixed bottom-20 right-5  bg-gradient-to-r from-purple-500 to-rose-500 p-2 shadow cursor-pointer rounded-full">
+  <div v-else @click="isShowingGame = true"  class="z-50 fixed bottom-20 right-1 sm:right-5  bg-gradient-to-r from-purple-500 to-rose-500 p-2 shadow cursor-pointer rounded-full">
     <Gamepad2 class="text-white" />
   </div>
 

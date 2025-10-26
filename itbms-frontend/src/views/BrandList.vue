@@ -49,13 +49,13 @@ function handleDeleted(deletedBrandId) {
       { to: { name: 'SaleItemList' }, label: 'Sale items list' },
       { to: '#', label: 'Brands list' },
     ]"
-  class="hidden md:flex px-4 sm:px-16 py-8 space-x-2"
+  class="px-8 pt-4"
   />
 
   <main class="p-4 md:p-8 md:pt-0 max-w-7xl mx-auto">
     <!-- Header: All Brands + Add Brand Button -->
-    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
-      <h1 class="flex items-center gap-2 text-2xl md:text-3xl font-bold text-gray-800 justify-center md:justify-start">
+    <div class="flex flex-col sm:flex-row items-center sm:justify-between gap-4 mb-4">
+      <h1 class="flex items-center gap-2 text-2xl md:text-3xl font-bold text-gray-800">
         <Package />
         All Brands
       </h1>

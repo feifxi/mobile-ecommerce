@@ -10,9 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
-import sit.int204.itbmsbackend.constant.OrderStatus;
-import sit.int204.itbmsbackend.constant.PaymentMethod;
-import sit.int204.itbmsbackend.constant.PaymentStatus;
+import sit.int204.itbmsbackend.constant.*;
 import sit.int204.itbmsbackend.dto.common.PageDTO;
 import sit.int204.itbmsbackend.dto.order.*;
 import sit.int204.itbmsbackend.entity.*;
@@ -206,11 +204,40 @@ public class OrderService {
         return res;
     }
 
-    public OrderResponse getOrderById(Integer orderId) {
+    public OrderResponse getOrderById(Integer orderId, Integer userId) {
         Order order = orderRepository.findById(orderId).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Order not found")
         );
+
+        if (!order.getBuyer().getId().equals(userId) && !order.getSeller().getId().equals(userId)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not allowed to view this order");
+        }
+
+        boolean updated = false;
+
+        if (order.getBuyer().getId().equals(userId) && !order.getBuyerViewed()) {
+            order.setBuyerViewed(true);
+            updated = true;
+        } else if (order.getSeller().getId().equals(userId) && !order.getSellerViewed()) {
+            order.setSellerViewed(true);
+            updated = true;
+        }
+
+        if (updated) {
+            orderRepository.save(order); // Save only if needed
+        }
+
         return mappedToDTO(order);
+    }
+
+    public Long getUnviewedOrderCount(Integer userId, UserType userType) {
+        if (UserType.BUYER.equals(userType)) {
+            return orderRepository.countUnviewedByBuyer(userId);
+        } else if (UserType.SELLER.equals(userType)) {
+            return orderRepository.countUnviewedBySeller(userId);
+        } else {
+            throw new IllegalArgumentException("Invalid userType: " + userType);
+        }
     }
 
     public OrderResponse mappedToDTO(Order order) {
@@ -221,6 +248,8 @@ public class OrderService {
         orderResponse.setOrderNote(order.getOrderNote());
         orderResponse.setOrderStatus(order.getStatus());
         orderResponse.setTotalAmount(order.getTotalAmount());
+        orderResponse.setBuyerViewed(order.getBuyerViewed());
+        orderResponse.setSellerViewed(order.getSellerViewed());
 //        orderResponse.setShippingAddress(order.getAddress().getAddressLine() + " " +  order.getAddress().getCity());
         orderResponse.setShippingAddress(order.getShippingAddressNote());
         // Order Item

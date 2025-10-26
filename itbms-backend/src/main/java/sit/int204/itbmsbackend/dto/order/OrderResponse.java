@@ -1,7 +1,9 @@
 package sit.int204.itbmsbackend.dto.order;
 
+import jakarta.persistence.Column;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 import sit.int204.itbmsbackend.constant.OrderStatus;
 
 import java.math.BigDecimal;
@@ -21,4 +23,6 @@ public class OrderResponse {
     private LocalDateTime orderDate;
     private OrderStatus orderStatus;
     private BigDecimal totalAmount;
+    private Boolean buyerViewed;
+    private Boolean sellerViewed;
 }

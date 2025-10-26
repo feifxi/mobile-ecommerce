@@ -176,10 +176,10 @@ const handleCloseNotiItemUpdateDialog = () => {
 </script>
 
 <template>
-  <div class="px-16 py-8">
-    <div class="bg-white px-16 py-8 rounded-xl shadow">
+  <div class="sm:px-8 xl:px-16 sm:py-8">
+    <div class="bg-white sm:px-8 xl:px-16 py-8 rounded-xl shadow">
       <div
-        class="bg-white bg-opacity-80 shadow-2xl shadow-pink-200 rounded-3xl p-6 sm:p-8 mb-6 border-4 border-pink-100 backdrop-blur-md"
+        class=" bg-white bg-opacity-80 shadow-2xl shadow-pink-200 rounded-3xl p-6 sm:p-8 mb-6 border-4 border-pink-100 backdrop-blur-md"
       >
         <div class="flex items-center justify-center gap-4">
           <div
@@ -207,6 +207,7 @@ const handleCloseNotiItemUpdateDialog = () => {
           </h1>
         </div>
       </div>
+      
       <!-- Loading State -->
       <div v-if="isLoading" class="text-center py-16">
         <div
@@ -305,7 +306,7 @@ const handleCloseNotiItemUpdateDialog = () => {
                           : placeHolder
                       "
                       alt="product"
-                      class="w-35 h-35 object-cover rounded-xl border-4 border-white shadow-md"
+                      class="w-25 h-25 sm:w-35 sm:h-35 object-cover rounded-xl border-4 border-white shadow-md"
                       @error="(event) => (event.target.src = placeHolder)"
                     />
                   </div>

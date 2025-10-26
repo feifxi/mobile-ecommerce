@@ -7,11 +7,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import sit.int204.itbmsbackend.constant.UserRole;
+import sit.int204.itbmsbackend.constant.UserType;
 import sit.int204.itbmsbackend.dto.order.*;
 import sit.int204.itbmsbackend.security.UserPrincipal;
 import sit.int204.itbmsbackend.service.OrderService;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @RestController
@@ -44,10 +47,16 @@ public class OrderController {
             @PathVariable Integer id,
             @AuthenticationPrincipal UserPrincipal userPrincipal
     ) {
-        OrderResponse order = orderService.getOrderById(id);
-        if (!order.getBuyerId().equals(userPrincipal.getId()) && !order.getSeller().getId().equals(userPrincipal.getId())) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-        }
+        OrderResponse order = orderService.getOrderById(id, userPrincipal.getId());
         return ResponseEntity.ok(order);
+    }
+
+    @GetMapping("/unviewed-count")
+    public Map<String, Long> getUnviewedOrderCount(
+            @AuthenticationPrincipal UserPrincipal userPrincipal,
+            @RequestParam UserType userType
+    ) {
+        long count = orderService.getUnviewedOrderCount(userPrincipal.getId(), userType);
+        return Map.of("unviewedOrders", count);
     }
 }

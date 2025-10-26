@@ -89,7 +89,7 @@ const handleCloseDialog = () => {
 
 const goToSignin = async () => {
   handleCloseDialog();
-  showLoginSuggestDialog.value = false
+  showLoginSuggestDialog.value = false;
   router.push({ name: "login" });
 };
 
@@ -128,8 +128,9 @@ onMounted(async () => {
             class="itbms-row flex flex-wrap gap-12 bg-white rounded-lg shadow-lg p-6"
           >
             <div class="flex-1 min-w-[300px] flex flex-col">
+              <!-- Main Image Preview -->
               <div
-                class="mb-6 text-center overflow-hidden rounded-lg shadow-md"
+                class="mb-6 text-center overflow-hidden rounded-lg shadow-md aspect-square"
               >
                 <img
                   :src="
@@ -138,23 +139,29 @@ onMounted(async () => {
                       : placeHolder
                   "
                   alt="product"
-                  class="w-full h-auto hover:scale-105 transition-transform duration-300"
+                  class="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                   @error="(event) => (event.target.src = placeHolder)"
                 />
               </div>
+
+              <!-- Thumbnail Images -->
               <div class="grid grid-cols-4 gap-1">
-                <img
+                <div
                   v-for="(image, i) of item.saleItemImages"
-                  @click="() => handleChangeSelectedImage(i)"
-                  :src="IMAGE_ENDPOINT + image.fileName || '/placeholder.svg'"
-                  alt="sale item"
+                  :key="i"
+                  class="aspect-square overflow-hidden rounded-md shadow-md cursor-pointer"
                   :class="
-                    'shadow-md cursor-pointer ' +
-                    (i == selectedImageIndex
-                      ? 'border-5 border-purple-600'
-                      : '')
+                    i == selectedImageIndex ? 'ring-2 ring-purple-600' : ''
                   "
-                />
+                  @click="() => handleChangeSelectedImage(i)"
+                >
+                  <img
+                    :src="IMAGE_ENDPOINT + image.fileName || placeHolder"
+                    alt="sale item"
+                    class="w-full h-full object-cover"
+                    @error="(event) => (event.target.src = placeHolder)"
+                  />
+                </div>
               </div>
             </div>
 
@@ -179,7 +186,10 @@ onMounted(async () => {
                   }}</span>
                   <span class="itbms-price-unit text-gray-600">Baht</span>
                 </div>
-                <div v-if="item.quantity > 0" class="flex items-center gap-3 mb-6">
+                <div
+                  v-if="item.quantity > 0"
+                  class="flex items-center gap-3 mb-6"
+                >
                   <span class="inline-flex items-center gap-1">
                     <span class="w-3 h-3 rounded-full bg-green-500"></span>
                     <span class="text-green-600 font-medium">In Stock</span>
@@ -256,7 +266,10 @@ onMounted(async () => {
                 </div>
               </div>
 
-              <div v-if="item.quantity > 0" class="flex gap-3 items-center mt-10">
+              <div
+                v-if="item.quantity > 0"
+                class="flex gap-3 items-center mt-10"
+              >
                 <div class="flex gap-3 items-center">
                   <Button
                     @click="decreaseNumberToCart"

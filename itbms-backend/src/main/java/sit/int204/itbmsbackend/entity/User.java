@@ -78,6 +78,12 @@ public class User {
     @Column(name = "verification_token_expiry")
     private LocalDateTime verificationTokenExpiry;
 
+    @Column(name = "reset_pass_token")
+    private String resetPassToken;
+
+    @Column(name = "reset_pass_token_expiry")
+    private LocalDateTime resetPassTokenExpiry;
+
     @Column(name = "created_on", nullable = false)
     private LocalDateTime createdOn;
 

@@ -10,7 +10,7 @@ defineProps({
 </script>
 
 <template>
-    <div class="flex items-center font-bold pb-4 text-sm sm:text-xl overflow-x-auto">
+    <div class="flex items-center font-bold pb-4 sm:text-xl overflow-x-auto">
         <div v-for="(link, index) of links" class="flex items-center whitespace-nowrap" :key="index">
             <div v-if="index === links.length-1" class="text-gray-800">
                 {{ link.label }}

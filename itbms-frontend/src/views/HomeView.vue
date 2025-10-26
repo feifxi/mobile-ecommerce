@@ -3,6 +3,7 @@
   import { RouterLink } from 'vue-router'
   import mockPhone from '@/assets/image/mockPhone.webp'
   import mockPhone2 from '@/assets/image/mock2.png' 
+  import mockPhone3 from '@/assets/image/iphone15pro.png' 
   import placeHolder from '@/assets/placeholder.svg' 
 import { useStatusMessageStore } from '@/stores/statusMessage';
   
@@ -32,7 +33,7 @@ import { useStatusMessageStore } from '@/stores/statusMessage';
       oldPrice: null,
       rating: 4,
       reviews: 95,
-      image: mockPhone
+      image: mockPhone3
     },
     {
       id: 3,
@@ -50,7 +51,7 @@ import { useStatusMessageStore } from '@/stores/statusMessage';
       oldPrice: 799,
       rating: 4,
       reviews: 64,
-      image: mockPhone
+      image: mockPhone3
     },
     {
       id: 5,
@@ -86,7 +87,7 @@ import { useStatusMessageStore } from '@/stores/statusMessage';
       oldPrice: 999,
       rating: 4,
       reviews: 31,
-      image: mockPhone2
+      image: mockPhone3
     }
   ]);
 
@@ -116,17 +117,12 @@ import { useStatusMessageStore } from '@/stores/statusMessage';
                 <button class="cursor-pointer bg-white text-rose-600 px-6 py-2 rounded-full font-medium hover:bg-opacity-90 transition-all transform hover:scale-105">
                   Buy Now
                 </button>
-              </RouterLink>
-              <RouterLink :to="{ name:'SaleItemList' }" class="itbms-shopnow">
-                <button class="cursor-pointer bg-white/20 backdrop-blur-sm text-white border border-white/30 px-6 py-2 rounded-full font-medium hover:bg-white/30 transition-all">
-                  Management
-                </button>
-              </RouterLink>
-              
+              </RouterLink>          
             </div>
           </div>
-          <div class="mt-6 md:mt-0 transform rotate-12 drop-shadow-2xl">
-            <img :src="placeHolder" alt="iPhone 15 Pro" class="h-48 md:h-64 object-contain" />
+
+          <div class="drop-shadow-2xl max-md:absolute -bottom-10 sm:-bottom-0 right-[6%] md:right-[20%] ">
+            <img :src="mockPhone3" alt="iPhone 15 Pro" class="h-48 md:h-70 object-contain" />
           </div>
         </div>
       </div>
@@ -157,7 +153,7 @@ import { useStatusMessageStore } from '@/stores/statusMessage';
         </div>
       </div>
       
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
         <div v-for="product in products" :key="product.id" 
           class="bg-white rounded-xl overflow-hidden border border-gray-100 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
           <div class="relative">

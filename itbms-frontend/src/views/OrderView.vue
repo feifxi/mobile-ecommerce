@@ -267,7 +267,7 @@ watch(
 
 <template>
   <div
-    class="px-4 sm:px-16 py-8 bg-gradient-to-br from-purple-50 via-pink-50 to-white min-h-screen"
+    class="px-4 lg:px-16 py-8 bg-gradient-to-br from-purple-50 via-pink-50 to-white min-h-screen"
   >
     <!-- Tab Buttons -->
     <div
@@ -298,10 +298,11 @@ watch(
       </button>
     </div>
 
-    <!-- Page Size & Sorting Option -->
+    <!-- Filter & Sorting Option -->
     <div class="p-3 rounded-xl mb-4 bg-white max-w-7xl mx-auto">
       <div class="flex max-md:flex-col gap-5 md:items-start">
-        <div class="flex-1 flex justify-start gap-3">
+        <div class="flex-1 flex justify-start gap-3 flex-wrap max-sm:justify-start">
+          <!-- Page Size -->
           <div class="flex gap-2 items-center">
             <h3>show</h3>
             <select
@@ -314,6 +315,7 @@ watch(
             </select>
           </div>
 
+          <!-- Sorting Options -->
           <div class="flex">
             <button
               @click="handleSortDefault"
@@ -358,6 +360,7 @@ watch(
             </button>
           </div>
 
+          <!-- Filter Order Status -->
           <div class="flex gap-2 items-center ml-auto">
             <h3>status</h3>
             <select
@@ -478,7 +481,7 @@ watch(
           class="relative block bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-[1.01] border-2 border-purple-100 hover:border-purple-300"
         >
           <div 
-            v-if="(new Date() - new Date(order.orderDate)) <= 24 * 60 * 60 * 1000" 
+            v-if="(currentTab == 'BUYER' && !order.buyerViewed) || (currentTab == 'SELLER' && !order.sellerViewed)" 
             class="absolute -left-3 -top-3 p-2 font-bold bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
             New
           </div>
