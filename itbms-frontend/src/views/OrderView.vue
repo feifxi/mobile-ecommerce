@@ -494,10 +494,10 @@ watch(
             >
               <div class="flex-1 min-w-0 text-center sm:text-left">
                 <div
-                  class="flex items-center justify-center sm:justify-start gap-3 mb-2 flex-wrap"
+                  class="flex items-center justify-start gap-3 mb-2 flex-wrap"
                 >
                   <h3
-                    class="text-lg font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent"
+                    class="text-left text-lg font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent"
                   >
                     Order #{{ order.orderId }}
                   </h3>
@@ -524,11 +524,12 @@ watch(
                   </span>
                 </div>
 
-                <p class="text-sm text-gray-600 mb-2 font-medium">
+                <p class="text-sm text-start text-gray-600 mb-2 font-medium">
                   {{ new Date(order.orderDate).toLocaleString() }}
                 </p>
 
-                <div class="flex gap-2 text-sm text-purple-600 font-medium">
+                  <!-- List Ordered Items -->
+               <div class="flex flex-wrap gap-2 text-sm text-purple-600 font-medium">
                   <div v-for="(item, index) of order.orderItems" :key="index">
                     <div
                       v-if="index < 2"
@@ -559,7 +560,10 @@ watch(
                 </div>
               </div>
 
-              <!-- Price -->
+            
+
+
+              <!-- Total Price -->
               <div
                 class="flex-shrink-0 text-center sm:text-right bg-white rounded-xl p-4 shadow-md border-2 border-purple-100"
               >
