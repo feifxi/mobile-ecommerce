@@ -110,14 +110,5 @@ MS-3-ITBMS/
 └── README.md
 ```
 
-## 🔒 Security Features
-
-- JWT-based authentication
-- Role-based access control (Customer/Admin)
-- Input validation and sanitization
-- HTTPS in production (upcoming)
-- CORS configuration
-- SQL injection protection via JPA
-
 ---
 ⭐ This project was developed as part of INT222 Integrated Project coursework to show the Full Stack skills.
