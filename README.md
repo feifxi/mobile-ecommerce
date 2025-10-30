@@ -4,7 +4,7 @@ A full-stack e-commerce web application for mobile devices and accessories, buil
 
 ## 🌐 Live Demo
 
-Visit the live application: [http://intproj24.sit.kmutt.ac.th/ms3/](http://intproj24.sit.kmutt.ac.th/ms3/)
+Visit the live application: [https://intproj24.sit.kmutt.ac.th/ms3/](http://intproj24.sit.kmutt.ac.th/ms3/)
 
 ## ✨ Features
 
@@ -13,9 +13,8 @@ Visit the live application: [http://intproj24.sit.kmutt.ac.th/ms3/](http://intpr
 - **Shopping Cart** - Add/remove items with real-time cart updates
 - **User Account** - Registration, login, and profile management
 - **Order Management** - Place orders and track order history
+- **AI Chatbot** - Integrated chatbot powered by Ollama local LLM
 - **Responsive Design** - Optimized for all device sizes
-- **Admin Panel (up comming)** - Manage products, categories, and orders
-- **Secure Payments (up comming)** - Integrated payment processing
 
 ## 🛠️ Technology Stack
 
@@ -26,16 +25,18 @@ Visit the live application: [http://intproj24.sit.kmutt.ac.th/ms3/](http://intpr
 - **Tailwind CSS** - Styling and responsive design
 
 ### Backend
-- **Java Spring Boot** - Enterprise-grade backend framework
+- **Spring Boot (Java)** - Backend service layer
 - **Spring Security** - Authentication and authorization
-- **Spring Data JPA** - Database abstraction layer
+- **Spring Data JPA** - ORM for database interaction
 - **MySQL** - Relational database
-- **REST API** - RESTful web services
+- **MinIO** - Local image storage
+- **Ollama** - Local LLM for chatbot feature
+
 
 ### DevOps & Deployment
-- **Docker** - Containerization platform
-- **Docker Compose** - Multi-container orchestration
-- **Production Server** - Deployed on university infrastructure (private VM)
+- **Docker & Docker Compose** - Containerized setup
+- **Reverse Proxy (Nginx)** - Frontend/backend routing
+- **University VM Server** - Production deployment environment
 
 ## 🚀 Getting Started
 
@@ -58,9 +59,6 @@ Visit the live application: [http://intproj24.sit.kmutt.ac.th/ms3/](http://intpr
 2. **Backend Setup**
    ```bash
    cd itbms-backend
-   # Configure database connection in application.yml
-   cp src/main/resources/application.example.yml src/main/resources/application.yml
-   # Install dependencies and run
    mvn clean install
    mvn spring-boot:run
    ```
@@ -72,9 +70,9 @@ Visit the live application: [http://intproj24.sit.kmutt.ac.th/ms3/](http://intpr
    npm run dev
    ```
 
-4. **Database Setup via Docker (run at root project)**
+4. **Dev Database, Minio, Ollama etc. Setup via Docker**
    ```docker
-   docker run --name itbms-dev-db -e MYSQL_ROOT_PASSWORD=rootpass -v ./itbms-database/init.sql:/docker-entrypoint-initdb.d/init.sql -p 3306:3306 -d mysql:latest
+   docker compose -f docker-compose-dev.yml up -d
    ```
    
 5. **Access the application**
@@ -85,7 +83,7 @@ Visit the live application: [http://intproj24.sit.kmutt.ac.th/ms3/](http://intpr
 
 **Build and run with Docker Compose**
    ```bash
-   docker-compose up --build
+   bash start.sh
    ```
 
 
@@ -111,33 +109,6 @@ MS-3-ITBMS/
 ├── docker-compose.yml       # Multi-container setup
 └── README.md
 ```
-
-## 🔧 Key Functionalities
-
-### Customer Features
-- Browse the product catalog with categories
-- Search and filter products
-- View detailed product information
-- Add items to the shopping cart
-- User registration and authentication
-- Place and track orders
-- Order history and receipts
-
-### Admin Features (upcoming)
-- Product management (CRUD operations)
-- Category management
-- Order management and status updates
-- User management
-- Sales analytics and reporting
-
-## 🐳 Docker Configuration
-
-The application uses multi-stage Docker builds for optimization:
-
-- **Frontend**: Nginx-served Vue.js build
-- **Backend**: OpenJDK with Spring Boot JAR
-- **Database**: MySQL container
-- **Reverse Proxy**: Nginx for routing
 
 ## 🔒 Security Features
 

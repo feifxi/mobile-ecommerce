@@ -149,7 +149,6 @@ export const registerUser = async (userData) => {
   });
 };
 
-
 export const verifyEmail = async (token) => {
   return await fetch(`${BASE_API}/v2/auth/verify-email`, {
     method: "POST",

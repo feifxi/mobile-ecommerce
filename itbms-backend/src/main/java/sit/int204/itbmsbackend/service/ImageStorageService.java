@@ -24,7 +24,7 @@ public class ImageStorageService {
 
     public boolean isValidFileSize(MultipartFile file) {
         DataSize maxSize = DataSize.parse(properties.getMaxSize());
-        return file.getSize() < maxSize.toBytes();
+        return file.getSize() <= maxSize.toBytes();
     }
 
     public boolean isValidFileType(MultipartFile file) {
