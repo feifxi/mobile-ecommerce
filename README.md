@@ -99,12 +99,12 @@ MS-3-ITBMS/
 │   │   ├── store/           # Pinia store 
 ├── itbms-backend/           # Spring Boot application
 │   ├── src/main/java/
-│   │   ├── controllers/     # REST controllers
-│   │   ├── services/        # Business logic layer
-│   │   ├── repositories/    # Data access layer
-│   │   ├── entities/        # Entity classes
+│   │   ├── controller/      # REST controllers
+│   │   ├── service/         # Business logic layer
+│   │   ├── repository/      # Data access layer
+│   │   ├── entity/          # Entity classes
 │   │   ├── security/        # Security modules
-│   │   └── configs/         # Configuration classes
+│   │   └── config/          # Configuration classes
 ├── itbms-database/          # SQL scripts for init database
 ├── docker-compose.yml       # Multi-container setup
 └── README.md
