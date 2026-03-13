@@ -6,6 +6,9 @@ A full-stack e-commerce web application for mobile devices and accessories, buil
 
 Visit the live application: [https://intproj24.sit.kmutt.ac.th/ms3/](http://intproj24.sit.kmutt.ac.th/ms3/)
 
+<img width="1470" height="799" alt="image" src="https://github.com/user-attachments/assets/1ee1e39b-fbee-43d9-9840-4f42f120f150" />
+<img width="1470" height="797" alt="image" src="https://github.com/user-attachments/assets/c0c7f2cf-adb0-4a19-98f0-0f15a1dd0f94" />
+
 ## ✨ Features
 
 - **Product Catalog** - Browse mobile phones and accessories
